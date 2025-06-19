@@ -18,7 +18,7 @@ jobs:
           echo "🔎 Checking branch: $BRANCH_NAME"
 
           # Skip validation for core branches
-          if [[ "$BRANCH_NAME" =~ ^(master|main|develop|release|refactor|story|defect)$ ]]; then
+          if [[ "$BRANCH_NAME" =~ ^(master|main|develop|release|refactor|story|defect|hotfix)$ ]]; then
             echo "ℹ️ Skipping validation for core branch: $BRANCH_NAME"
             exit 0
           fi
