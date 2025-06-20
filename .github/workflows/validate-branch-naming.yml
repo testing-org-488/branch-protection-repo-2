@@ -16,6 +16,7 @@ jobs:
         run: |
           BRANCH_NAME="${GITHUB_REF##refs/heads/}"
           echo "🔎 Checking branch: $BRANCH_NAME"
+          echo "Person who pushed the code: $GITHUB_ACTOR"
 
           # Skip validation for core branches
           if [[ "$BRANCH_NAME" =~ ^(master|main|develop|release|refactor|story|defect|hotfix)$ ]]; then
