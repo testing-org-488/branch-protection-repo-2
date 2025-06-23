@@ -1,0 +1,41 @@
+name: Enforce Branch Naming Convention
+
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  validate-branch-name:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check branch name format
+        run: |
+          BRANCH_NAME="${GITHUB_REF##refs/heads/}"
+          echo "🔎 Checking branch: $BRANCH_NAME"
+          echo "👤 Pushed by: $GITHUB_ACTOR"
+
+          # Check branch name length
+          if (( ${#BRANCH_NAME} > 75 )); then
+            echo "❌ Branch name exceeds 75 characters (${#BRANCH_NAME})"
+            exit 1
+          fi
+
+          # Skip core branches
+          if [[ "$BRANCH_NAME" =~ ^(master|main|develop|release|refactor|story|defect|hotfix)$ ]]; then
+            echo "ℹ️ Skipping core branch: $BRANCH_NAME"
+            exit 0
+          fi
+
+          PATTERN='^(story|defect|hotfix)-[a-zA-Z][a-zA-Z0-9]*[0-9]+-US[0-9]+(_[a-zA-Z]+)?$'
+
+          if [[ "$BRANCH_NAME" =~ $PATTERN ]]; then
+            echo "✅ Branch name is valid."
+            exit 0
+          else
+            echo "❌ Invalid branch name: '$BRANCH_NAME'"
+            echo "📌 Expected format: story|defect|hotfix-<msid>-US<jira_id>[_<optional_short_description>]"
+            echo "📌 Example (valid): story-asin1329-US12345_shortdesc"
+            echo "🔒 Max length: 75 characters"
+            exit 1
+          fi
