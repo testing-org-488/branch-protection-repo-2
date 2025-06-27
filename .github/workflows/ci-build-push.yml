@@ -46,7 +46,7 @@ jobs:
 
     env:
       IMAGE_NAME: java-app
-      VERSION_TAG: latest  # You can later update this to use dynamic tags
+      VERSION_TAG: latest
 
     steps:
       - name: Checkout code
@@ -61,7 +61,7 @@ jobs:
       - name: Build with Maven
         run: mvn clean package --no-transfer-progress
 
-      - name: Log in to JFrog Artifactory Docker Registry
+      - name: Log in to JFrog Artifactory
         uses: docker/login-action@v3
         with:
           registry: ${{ secrets.ARTIFACTORY_REGISTRY }}
@@ -70,10 +70,8 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t ${{ secrets.ARTIFACTORY_REGISTRY }}/${{ secrets.ARTIFACTORY_REPO }}/${{ env.IMAGE_NAME }}:${{ env.VERSION_TAG }} .
+          docker build -t ${{ secrets.ARTIFACTORY_REGISTRY }}/dms-poc-github/java-app:latest .
 
-      - name: Push Docker image to Artifactory
+      - name: Push Docker image
         run: |
-          docker push ${{ secrets.ARTIFACTORY_REGISTRY }}/${{ secrets.ARTIFACTORY_REPO }}/${{ env.IMAGE_NAME }}:${{ env.VERSION_TAG }}
-
-
+          docker push ${{ secrets.ARTIFACTORY_REGISTRY }}/dms-poc-github/java-app:latest
